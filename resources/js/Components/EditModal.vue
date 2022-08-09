@@ -1,6 +1,6 @@
 <template>
     <TransitionRoot as="template" :show="open">
-        <Dialog as="div" class="relative z-10" @close="open = false">
+        <Dialog as="div" class="relative z-10">
             <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100"
                              leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
                 <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
@@ -65,7 +65,7 @@
                                 </button>
                                 <button type="button"
                                         class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-600 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:text-sm"
-                                        @click="$emit('close')">Abbrechen
+                                        @click="$emit('modal-close')">Abbrechen
                                 </button>
                             </div>
                         </DialogPanel>
@@ -81,6 +81,7 @@ import {ref, toRef, watch} from 'vue'
 import {Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot} from '@headlessui/vue'
 import {CheckIcon} from '@heroicons/vue/outline'
 import {Inertia} from "@inertiajs/inertia";
+import {voucherRoute} from "../Helper/routes";
 
 const props = defineProps({
     open: Boolean,
@@ -104,10 +105,10 @@ watch(props, (oldVal, newProps) => {
     paid.value = newProps.voucher.paid_on !== null;
 })
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['modal-close']);
 
 function updateVoucher() {
-    Inertia.put(`/dashboard/${props.voucher?.id}`, {amount: copy.value.amount, paid: paid.value});
-    emit('close');
+    Inertia.put(voucherRoute(props.voucher.id), {amount: copy.value.amount, paid: paid.value});
+    emit('modal-close');
 }
 </script>

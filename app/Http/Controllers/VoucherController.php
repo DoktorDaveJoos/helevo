@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\VoucherCashRequest;
+use App\Http\Requests\VoucherCreateRequest;
 use App\Models\Voucher;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -55,19 +59,21 @@ class VoucherController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @param Request $request
-     * @return Response
+     * @param VoucherCreateRequest $request
+     * @return RedirectResponse
      */
-    public function create(Request $request): Response
+    public function create(VoucherCreateRequest $request): RedirectResponse
     {
+        $validated = $request->validated();
+
         $voucher = new Voucher();
         $voucher->code = 'HM-' . strtoupper(Str::random(5));
-        $voucher->amount = $request->amount;
-        $voucher->paid_on = $request->paid ? Carbon::now()->toDateString() : null;
+        $voucher->amount = $validated['amount'];
+        $voucher->paid_on = $validated['paid'] ? Carbon::now()->toDateString() : null;
         $voucher->user_id = auth()->user()->id;
         $voucher->save();
 
-        return $this->renderPage($request);
+        return Redirect::route('dashboard', $request->query->all());
     }
 
     /**
@@ -102,48 +108,49 @@ class VoucherController extends Controller
         //
     }
 
+    public function cash(int $id, VoucherCashRequest $request)
+    {
+        $voucher = Voucher::find($id);
+
+        if ($voucher->paid_on == null) {
+            return Redirect::route('dashboard', $request->query->all())
+                ->withErrors(
+                    ['Gutschein' => 'Gutschein kann nicht eingelöst werden, da er nicht bezahlt wurde'],
+                    'notification'
+                );
+        }
+
+        $validated = $request->validated();
+
+        $voucher->cashed_on = $validated['cashed'] ? Carbon::now()->toDateTimeString() : null;
+        $voucher->save();
+
+        return Redirect::route('dashboard', $request->query->all());
+    }
+
     /**
      * Update the specified resource in storage.
      *
      * @param int $id
-     * @param Request $request
-     * @return Response
+     * @param VoucherCreateRequest $request
+     * @return RedirectResponse
      */
-    public function update(int $id, Request $request): Response
+    public function update(int $id, VoucherCreateRequest $request): RedirectResponse
     {
+        $validated = $request->validated();
         $voucher = Voucher::find($id);
 
-        if ($request->has('cashed')) {
+        $voucher->amount = $validated['amount'];
 
-            if ($request->cashed) {
-                if ($voucher->paid_on == null) {
-                    return $this->renderPage($request, [
-                        'topic' => 'Einlöse',
-                        'message' => 'Gutschein kann nicht eingelöst werden, da er nicht bezahlt wurde.',
-                    ]);
-                }
-                $voucher->cashed_on = Carbon::now()->toDateTimeString();
-            } else {
-                $voucher->cashed_on = null;
-            }
-
-            $voucher->save();
-
-            return $this->renderPage($request);
-        }
-
-        $voucher->amount = $request->amount;
-
-        if (!$request->paid && $voucher->paid_on != null) {
+        if (!$validated['paid']) {
             $voucher->paid_on = null;
-        }
-
-        if ($request->paid && $voucher->paid_on == null) {
+        } elseif ($voucher->paid_on === null) {
             $voucher->paid_on = Carbon::now()->toDateTimeString();
         }
+
         $voucher->save();
 
-        return $this->renderPage($request);
+        return Redirect::route('dashboard', $request->query->all());
     }
 
     /**

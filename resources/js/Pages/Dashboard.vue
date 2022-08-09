@@ -3,30 +3,24 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import AmountModal from "@/Components/AmountModal.vue";
 import EditModal from "@/Components/EditModal.vue";
 import Pagination from "../Components/Pagination.vue";
-import {ExclamationCircleIcon} from '@heroicons/vue/outline'
-import {XIcon} from '@heroicons/vue/solid'
-import {defineProps, ref, watch} from "vue";
+import Notification from "../Components/Notification.vue";
+import {computed, defineProps, ref} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import ActionBar from "../Components/ActionBar.vue";
-import { voucherRoute } from "../Helper/routes";
+import {voucherCashRoute} from "../Helper/routes";
+import {usePage} from "@inertiajs/inertia-vue3";
 
 const props = defineProps({
     vouchers: Object,
-    notification: Object
 });
 
 const modal = ref(false);
 const editModal = ref(false);
 const selected = ref(null);
-const showWarning = ref(props.notification?.topic !== undefined);
 
 function showModal() {
     modal.value = !modal.value;
 }
-
-watch(props, (_, props) => {
-    showWarning.value = props.notification?.topic !== undefined;
-})
 
 function showEditModal(voucher) {
     selected.value = voucher;
@@ -34,10 +28,22 @@ function showEditModal(voucher) {
 }
 
 function cash(voucher) {
-    Inertia.put(voucherRoute(voucher.id),
-        {cashed: voucher.cashed_on === null},
-        {preserveState: true});
+    Inertia.put(voucherCashRoute(voucher.id), {cashed: voucher.cashed_on === null}, {
+        preserveScroll: true
+    });
 }
+
+const notifications = computed(() => {
+    const keys = Object.keys(usePage().props.value.errorBags.notification ?? {});
+
+    return keys.map(key => {
+        return {
+            title: key,
+            message: usePage().props.value.errors.notification[key],
+            seed: Math.random()
+        }
+    })
+})
 
 </script>
 
@@ -145,6 +151,7 @@ function cash(voucher) {
                                         </tbody>
                                     </table>
                                     <Pagination
+                                        :current="vouchers.current_page"
                                         :from="vouchers.from"
                                         :last-page="vouchers.last_page"
                                         :path="vouchers.path">
@@ -171,46 +178,17 @@ function cash(voucher) {
                 </div>
 
             </div>
-            <AmountModal :open="modal" @close="modal = false"></AmountModal>
-            <EditModal :open="editModal" @close="editModal = false; selected.value = null"
-                       :voucher="selected"></EditModal>
-
-
-            <div aria-live="assertive"
-                 class="fixed inset-0 flex items-end px-4 py-6 pointer-events-none sm:p-6 sm:items-start">
-                <div class="w-full flex flex-col items-center space-y-4 sm:items-end">
-                    <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
-                    <transition enter-active-class="transform ease-out duration-300 transition"
-                                enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
-                                enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
-                                leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100"
-                                leave-to-class="opacity-0">
-                        <div v-if="showWarning"
-                             class="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden">
-                            <div class="p-4">
-                                <div class="flex items-start">
-                                    <div class="flex-shrink-0">
-                                        <ExclamationCircleIcon class="h-6 w-6 text-red-400" aria-hidden="true" />
-                                    </div>
-                                    <div class="ml-3 w-0 flex-1 pt-0.5">
-                                        <p class="text-sm font-medium text-gray-900">{{ notification.topic }}</p>
-                                        <p class="mt-1 text-sm text-gray-500">{{ notification.message }}</p>
-                                    </div>
-                                    <div class="ml-4 flex-shrink-0 flex">
-                                        <button type="button" @click="showWarning = false"
-                                                class="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                            <span class="sr-only">Close</span>
-                                            <XIcon class="h-5 w-5" aria-hidden="true" />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </transition>
-                </div>
-            </div>
+            <AmountModal :open="modal" @modalClose="modal = false"></AmountModal>
+            <EditModal :open="editModal"
+                       @modalClose="editModal = false; selected.value = null"
+                       :voucher="selected">
+            </EditModal>
+            <Notification v-for="notification in notifications"
+                          :title="notification.title"
+                          :error="notification.message"
+                          :seed="notification.seed">
+            </Notification>
         </div>
-
     </AppLayout>
 </template>
 

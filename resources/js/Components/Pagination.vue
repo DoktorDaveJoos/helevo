@@ -3,6 +3,7 @@ import {ArrowNarrowLeftIcon, ArrowNarrowRightIcon} from '@heroicons/vue/solid';
 import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
+    current: Number,
     from: Number,
     lastPage: Number,
     path: String
@@ -39,7 +40,7 @@ const computePages = (currentPage, lastPage) => {
     return pages;
 }
 
-const pages = computePages(props.from, props.lastPage);
+const pages = computePages(props.current, props.lastPage);
 
 function goToPage(page) {
     const params = new URLSearchParams()
@@ -49,14 +50,14 @@ function goToPage(page) {
 }
 
 function next() {
-    if (props.from < props.lastPage) {
-        goToPage(props.from + 1);
+    if (props.current < props.lastPage) {
+        goToPage(props.current + 1);
     }
 }
 
 function previous() {
-    if (props.from > 1) {
-        goToPage(props.from - 1);
+    if (props.current > 1) {
+        goToPage(props.current - 1);
     }
 }
 
@@ -78,13 +79,13 @@ function previous() {
         </div>
         <div class="hidden md:-mt-px md:flex">
             <template v-for="page in pages">
-                <a v-if="page !== '...'" href="#"
+                <a v-if="page !== '...'"
                    @click="goToPage(page)"
-                   class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium"
-                   :class="{'text-indigo-500 border-indigo-500 hover:border-indigo-500': page === from}"
+                   class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium cursor-pointer"
+                   :class="{'text-indigo-500 border-indigo-500 hover:border-indigo-500': page === current}"
                 >
                     {{ page }} </a>
-                <a v-else href="#"
+                <a v-else
                    class="border-transparent text-gray-500 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium disabled">
                     {{ page }} </a>
             </template>
