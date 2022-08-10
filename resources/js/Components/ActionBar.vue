@@ -24,6 +24,7 @@ window.addEventListener("keypress", e => {
             params.append('search', term.value);
             Inertia.get(searchRoute(params), {}, {
                 preserveState: true,
+                errorBag: 'notification'
             });
         }
     }
@@ -48,7 +49,7 @@ function clearInput() {
                     <label for="search" class="block text-sm font-semibold text-gray-700">Gutschein-Code</label>
                     <div class="mt-1 relative flex items-center">
                         <input v-model="term" ref="search" type="text" name="search" id="search" placeholder="XY-AB123"
-                               class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md" />
+                               class="shadow-sm focus:ring-helevo-red focus:border-helevo-red block w-full pr-12 sm:text-sm border-gray-300 rounded-md" />
 
                         <div v-if="term.length > 0" @click="clearInput()" class="absolute inset-y-0 right-0 pr-16 flex items-center cursor-pointer">
                             <XCircleIcon class="h-5 w-5 text-gray-400 hover:text-gray-600 mr-1 cursor-pointer" aria-hidden="true" />

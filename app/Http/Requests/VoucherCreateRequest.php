@@ -33,6 +33,7 @@ class VoucherCreateRequest extends FormRequest
     {
         return [
             'amount.required' => 'Gutschein Betrag darf nicht leer sein.',
+            'amount.regex' => 'Betrag muss eine Zahl sein. Bei Cent Beträgen muss ein Punkt verwendet werden: 29.90'
         ];
     }
 }

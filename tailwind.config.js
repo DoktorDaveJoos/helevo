@@ -15,6 +15,10 @@ module.exports = {
             fontFamily: {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                'helevo-red': '#EC5A61',
+                'helevo-red-light': '#F28D91'
+            }
         },
     },
 

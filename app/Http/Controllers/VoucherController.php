@@ -21,12 +21,7 @@ class VoucherController extends Controller
      * Display a listing of the resource.
      *
      */
-    public function index(?Request $request): Response
-    {
-        return $this->renderPage($request);
-    }
-
-    private function renderPage(Request $request, ?array $notification = null): Response
+    public function index(?Request $request): RedirectResponse | Response
     {
         $vouchersQuery = auth()->user()->vouchers();
 
@@ -39,19 +34,15 @@ class VoucherController extends Controller
         if ($vouchers->isEmpty() && $request->has('search')) {
             $vouchers = auth()->user()->vouchers()->paginate(self::PAGES);
 
-            $notification = [
-                'topic' => 'Suche',
-                'message' => sprintf('Kein Ergebnis für "%s" gefunden', $request->search),
-            ];
+            return Redirect::route('dashboard')->withErrors(
+                ['Suche' =>  sprintf('Kein Gutschein mit Code "%s" gefunden', $request->search)],
+                'notification'
+            );
         }
 
         $data = [
             'vouchers' => $vouchers,
         ];
-
-        if ($notification) {
-            $data['notification'] = $notification;
-        }
 
         return Inertia::render('Dashboard', $data);
     }

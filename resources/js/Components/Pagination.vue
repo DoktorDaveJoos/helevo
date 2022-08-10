@@ -82,7 +82,7 @@ function previous() {
                 <a v-if="page !== '...'"
                    @click="goToPage(page)"
                    class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium cursor-pointer"
-                   :class="{'text-indigo-500 border-indigo-500 hover:border-indigo-500': page === current}"
+                   :class="{'text-helevo-red border-helevo-red hover:border-helevo-red': page === current}"
                 >
                     {{ page }} </a>
                 <a v-else

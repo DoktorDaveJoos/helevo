@@ -1,30 +1,30 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
-import AmountModal from "@/Components/AmountModal.vue";
-import EditModal from "@/Components/EditModal.vue";
-import Pagination from "../Components/Pagination.vue";
-import Notification from "../Components/Notification.vue";
 import {computed, defineProps, ref} from "vue";
 import {Inertia} from "@inertiajs/inertia";
-import ActionBar from "../Components/ActionBar.vue";
 import {voucherCashRoute} from "../Helper/routes";
 import {usePage} from "@inertiajs/inertia-vue3";
+import {CashIcon, PencilAltIcon, ReceiptRefundIcon} from "@heroicons/vue/outline";
+
+import AppLayout from '@/Layouts/AppLayout.vue';
+import Pagination from "../Components/Pagination.vue";
+import Notification from "../Components/Notification.vue";
+import JetButton from "@/Jetstream/Button.vue";
+import ActionBar from "../Components/ActionBar.vue";
+import Modal from "../Components/Modal.vue";
 
 const props = defineProps({
     vouchers: Object,
 });
 
+defineEmits(['close-dialog']);
+
 const modal = ref(false);
-const editModal = ref(false);
+
 const selected = ref(null);
 
-function showModal() {
-    modal.value = !modal.value;
-}
-
-function showEditModal(voucher) {
+function showModal(voucher = null) {
     selected.value = voucher;
-    editModal.value = !editModal.value;
+    modal.value = !modal.value;
 }
 
 function cash(voucher) {
@@ -62,11 +62,9 @@ const notifications = computed(() => {
                                 exportieren Sie die Liste.</p>
                         </div>
                         <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                            <button @click="showModal"
-                                    type="button"
-                                    class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
+                            <JetButton @click="showModal">
                                 Neuer Gutschein
-                            </button>
+                            </JetButton>
                         </div>
                     </div>
 
@@ -137,15 +135,24 @@ const notifications = computed(() => {
                                                 }}
                                             </td>
                                             <td class="relative whitespace-nowrap py-4 pl-1 pr-1 text-right text-sm font-medium sm:pr-6">
-                                                <a @click="cash(voucher)" href="#"
-                                                   class="text-indigo-600 hover:text-indigo-900"
-                                                >{{ voucher.cashed_on === null ? 'Einlösen' : 'Aktivieren' }}<span
-                                                    class="sr-only">, {{ voucher.code }}</span></a>
+                                                <button @click="cash(voucher)"
+                                                        class="flex"
+                                                        :class="{'text-red-400 hover:text-red-500': voucher.cashed_on, 'text-indigo-400 hover:text-indigo-500': !voucher.cashed_on}"
+                                                >
+
+                                                    {{ !voucher.cashed_on ? 'Einlösen' : 'Reaktivieren' }}
+                                                    <CashIcon class="ml-2 h-4 w-4" v-if="!voucher.cashed_on" />
+                                                    <ReceiptRefundIcon class="ml-2 h-4 w-4" v-else />
+
+                                                    <span class="sr-only">, {{ voucher.code }}</span>
+                                                </button>
                                             </td>
                                             <td class="relative whitespace-nowrap py-4 pl-1 pr-1 text-right text-sm font-medium sm:pr-6">
-                                                <a @click="showEditModal(voucher)" href="#"
-                                                   class="text-indigo-600 hover:text-indigo-900"
-                                                >Bearbeiten<span class="sr-only">, {{ voucher.code }}</span></a>
+                                                <button @click="showModal(voucher)"
+                                                        class="flex text-gray-400 hover:text-gray-500">
+                                                    <PencilAltIcon class="w-4 h-4" />
+                                                    <span class="sr-only">, {{ voucher.code }}</span>
+                                                </button>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -178,11 +185,8 @@ const notifications = computed(() => {
                 </div>
 
             </div>
-            <AmountModal :open="modal" @modalClose="modal = false"></AmountModal>
-            <EditModal :open="editModal"
-                       @modalClose="editModal = false; selected.value = null"
-                       :voucher="selected">
-            </EditModal>
+            <Modal :show="modal" :voucher="selected" @close-dialog="modal = false; selected = null"></Modal>
+
             <Notification v-for="notification in notifications"
                           :title="notification.title"
                           :error="notification.message"
