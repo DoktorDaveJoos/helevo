@@ -24,7 +24,7 @@ class VoucherCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'amount' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'amount' => 'required|regex:/^\d+(\.\d{1,2})?$/|digits:8',
             'paid' => 'required|boolean'
         ];
     }
@@ -33,7 +33,8 @@ class VoucherCreateRequest extends FormRequest
     {
         return [
             'amount.required' => 'Gutschein Betrag darf nicht leer sein.',
-            'amount.regex' => 'Betrag muss eine Zahl sein. Bei Cent Beträgen muss ein Punkt verwendet werden: 29.90'
+            'amount.regex' => 'Betrag muss eine Zahl sein. Bei Cent Beträgen muss ein Punkt verwendet werden: 29.90',
+            'amount.digits' => 'Dein Betrag ist zu hoch. Der Maximalbetrag ist 999.999,00€',
         ];
     }
 }
