@@ -17,7 +17,9 @@ const form = useForm({
 })
 
 function submit() {
-    form.post('/dashboard/import');
+    form.post('/dashboard/import', {
+        onSuccess: () => emit('close-dialog')
+    });
 }
 
 function cancel() {

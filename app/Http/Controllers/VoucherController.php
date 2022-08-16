@@ -76,8 +76,6 @@ class VoucherController extends Controller
         return Redirect::route('dashboard', $request->query->all());
     }
 
-
-
     public function cash(int $id, VoucherCashRequest $request): RedirectResponse
     {
         /** @var Voucher $voucher */

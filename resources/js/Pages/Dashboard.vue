@@ -2,7 +2,6 @@
 import {computed, defineProps, ref} from "vue";
 import {usePage} from "@inertiajs/inertia-vue3";
 import {CashIcon, GiftIcon, PencilAltIcon, CubeTransparentIcon} from "@heroicons/vue/outline";
-import {getActualAmount, getActualAmountDate, getInitialAmount} from "../Helper/voucher";
 
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Pagination from "../Components/Pagination.vue";
@@ -114,10 +113,10 @@ const notifications = computed(() => {
                                             <td class="whitespace-nowrap font-light px-3 py-4 text-sm text-gray-500 italic"
                                                 :class="{ 'line-through': voucher.amount_history.length > 1 }"
                                             >
-                                                {{ getInitialAmount(voucher) }} €
+                                                {{ voucher.initial_amount }} €
                                             </td>
                                             <td class="whitespace-nowrap font-semibold text-sm px-3 py-4 text-gray-500">
-                                                {{ getActualAmount(voucher) }} €
+                                                {{ voucher.actual_amount }} €
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                 <template v-if="!voucher.paid_on">
@@ -141,7 +140,7 @@ const notifications = computed(() => {
                                                 {{ voucher.paid_on ?? 'Nicht bezahlt' }}
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-xs text-gray-500">{{
-                                                    voucher.amount_history.length > 1 ? getActualAmountDate(voucher) : '-'
+                                                    voucher.last_cashed
                                                 }}
                                             </td>
                                             <td class="relative whitespace-nowrap py-4 pl-1 pr-1 text-right text-sm font-medium sm:pr-6">
@@ -197,9 +196,8 @@ const notifications = computed(() => {
                     </div>
                     <p class="mb-3 text-sm text-gray-500">ODER</p>
                     <JetButton type="button" @click="initialImport=true">Gutschein Excelimport</JetButton>
-                    <ExcelImport :show="initialImport"></ExcelImport>
+                    <ExcelImport :show="initialImport" @close-dialog="initialImport = false"></ExcelImport>
                 </div>
-
 
             </div>
             <VoucherUpdateCreate :show="modal" :voucher="selected" :is-cash="isCash"

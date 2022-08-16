@@ -39,12 +39,6 @@ class VouchersImport implements ToCollection, WithHeadingRow
             ]);
 
             if (is_numeric($row['restbetrag']) && $row['restbetrag'] !== $row['gutschein_betrag']) {
-                // race conditions
-                $initial = $voucher->amountHistory()->latest()->first();
-
-                $initial->created_at = Carbon::parse($initial->created_at)->subHour()->toDateTimeString();
-                $initial->save();
-
                 $voucher->amountHistory()->create([
                     'amount' => $row['restbetrag']
                 ]);

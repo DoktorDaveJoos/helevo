@@ -6,7 +6,6 @@ import JetButton from "../Jetstream/Button.vue";
 
 import {Inertia} from "@inertiajs/inertia";
 import {voucherCashRoute, voucherRoute, vouchersRoute} from "../Helper/routes";
-import {getActualAmount} from "../Helper/voucher";
 import ModalWrapper from "./ModalWrapper.vue";
 
 const props = defineProps({
@@ -20,7 +19,8 @@ const props = defineProps({
 const emit = defineEmits(['close-dialog']);
 
 watch(props, (o, props) => {
-    if (props.voucher) {
+
+    if (props.voucher?.id) {
         const {amount_history, paid_on} = props.voucher;
         if (!props.isCash) {
             form.amount = amount_history[0].amount ?? '';
@@ -29,12 +29,12 @@ watch(props, (o, props) => {
         return;
     }
 
-    form.amount = null;
+    form.amount = '';
     form.paid = true;
 })
 
 const form = reactive({
-    amount: null,
+    amount: '',
     paid: true
 });
 
@@ -70,7 +70,7 @@ function updateVoucher() {
 }
 
 function cash() {
-    const cashAmount = form.amount.length === 0 ? getActualAmount(props.voucher) : form.amount;
+    const cashAmount = form.amount.length === 0 ? props.voucher.actual_amount : form.amount;
 
     Inertia.put(voucherCashRoute(props.voucher.id), {amount: cashAmount}, {
         preserveScroll: true,

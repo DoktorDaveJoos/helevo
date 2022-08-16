@@ -2,11 +2,9 @@
 
 namespace App\Casts;
 
-use Carbon\Carbon;
-use Carbon\CarbonTimeZone;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
-class GermanDateTime implements CastsAttributes
+class ActualAmount implements CastsAttributes
 {
     /**
      * Cast the given value.
@@ -19,11 +17,7 @@ class GermanDateTime implements CastsAttributes
      */
     public function get($model, string $key, $value, array $attributes)
     {
-        if (!$value) {
-            return null;
-        }
-
-        return Carbon::parse($value)->timezone('Europe/Berlin')->format('d.m.Y H:i:s');
+        return 'foobar';
     }
 
     /**
