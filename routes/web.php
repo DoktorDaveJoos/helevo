@@ -34,4 +34,7 @@ Route::middleware([
     Route::post('/dashboard', [VoucherController::class, 'create'])->name('dashboard.create');
     Route::put('/dashboard/{id}', [VoucherController::class, 'update'])->name('dashboard.update');
     Route::put('/dashboard/{id}/cash', [VoucherController::class, 'cash'])->name('dashboard.cash');
+
+    Route::get('/dashboard/export', [VoucherController::class, 'export'])->name('dashboard.export');
+    Route::post('/dashboard/import', [VoucherController::class, 'import'])->name('dashboard.import');
 });

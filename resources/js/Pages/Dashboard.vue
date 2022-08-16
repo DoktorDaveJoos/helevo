@@ -1,16 +1,16 @@
 <script setup>
 import {computed, defineProps, ref} from "vue";
-import {Inertia} from "@inertiajs/inertia";
-import {voucherCashRoute} from "../Helper/routes";
 import {usePage} from "@inertiajs/inertia-vue3";
-import {CashIcon, PencilAltIcon, ReceiptRefundIcon} from "@heroicons/vue/outline";
+import {CashIcon, GiftIcon, PencilAltIcon, CubeTransparentIcon} from "@heroicons/vue/outline";
+import {getActualAmount, getActualAmountDate, getInitialAmount} from "../Helper/voucher";
 
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Pagination from "../Components/Pagination.vue";
 import Notification from "../Components/Notification.vue";
 import JetButton from "@/Jetstream/Button.vue";
 import ActionBar from "../Components/ActionBar.vue";
-import Modal from "../Components/Modal.vue";
+import VoucherUpdateCreate from "../Components/VoucherUpdateCreate.vue";
+import ExcelImport from "../Components/ExcelImport.vue";
 
 const props = defineProps({
     vouchers: Object,
@@ -21,16 +21,13 @@ defineEmits(['close-dialog']);
 const modal = ref(false);
 
 const selected = ref(null);
+const isCash = ref(false);
+const initialImport = ref(false);
 
-function showModal(voucher = null) {
+function showModal(voucher = null, cash = false) {
+    isCash.value = cash;
     selected.value = voucher;
     modal.value = !modal.value;
-}
-
-function cash(voucher) {
-    Inertia.put(voucherCashRoute(voucher.id), {cashed: voucher.cashed_on === null}, {
-        preserveScroll: true
-    });
 }
 
 const notifications = computed(() => {
@@ -62,7 +59,7 @@ const notifications = computed(() => {
                                 exportieren Sie die Liste.</p>
                         </div>
                         <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                            <JetButton @click="showModal">
+                            <JetButton @click="showModal()">
                                 Neuer Gutschein
                             </JetButton>
                         </div>
@@ -86,6 +83,10 @@ const notifications = computed(() => {
                                                 Betrag
                                             </th>
                                             <th scope="col"
+                                                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                Restbetrag
+                                            </th>
+                                            <th scope="col"
                                                 class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status
                                             </th>
                                             <th scope="col"
@@ -94,7 +95,7 @@ const notifications = computed(() => {
                                             </th>
                                             <th scope="col"
                                                 class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                Eingelöst am
+                                                Zuletzt benutzt
                                             </th>
                                             <th scope="col" class="relative py-3.5 pl-1 pr-4 sm:pr-6">
                                                 <span class="sr-only">Aktion</span>
@@ -110,46 +111,56 @@ const notifications = computed(() => {
                                             <td class="whitespace-nowrap py-4 pl-4 pr-3 text font-semibold text-gray-800 sm:pl-6">
                                                 {{ voucher.code }}
                                             </td>
-                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                {{ voucher.amount }} €
+                                            <td class="whitespace-nowrap font-light px-3 py-4 text-sm text-gray-500 italic"
+                                                :class="{ 'line-through': voucher.amount_history.length > 1 }"
+                                            >
+                                                {{ getInitialAmount(voucher) }} €
+                                            </td>
+                                            <td class="whitespace-nowrap font-semibold text-sm px-3 py-4 text-gray-500">
+                                                {{ getActualAmount(voucher) }} €
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                 <template v-if="!voucher.paid_on">
                                                     <span
-                                                        class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-red-100 text-red-800"> Geblockt </span>
+                                                        class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"> Geblockt </span>
                                                 </template>
                                                 <template v-else-if="voucher.cashed_on">
                                                     <span
-                                                        class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800"> Eingelöst </span>
+                                                        class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"> Eingelöst </span>
+                                                </template>
+                                                <template v-else-if="voucher.amount_history.length > 1">
+                                                    <span
+                                                        class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800"> Teilweise eingelöst </span>
                                                 </template>
                                                 <template v-else>
                                                     <span
-                                                        class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800"> Offen </span>
+                                                        class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"> Offen </span>
                                                 </template>
                                             </td>
-                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            <td class="whitespace-nowrap px-3 py-4 text-xs text-gray-500">
                                                 {{ voucher.paid_on ?? 'Nicht bezahlt' }}
                                             </td>
-                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{
-                                                    voucher.cashed_on ?? 'Nicht eingelöst'
+                                            <td class="whitespace-nowrap px-3 py-4 text-xs text-gray-500">{{
+                                                    voucher.amount_history.length > 1 ? getActualAmountDate(voucher) : '-'
                                                 }}
                                             </td>
                                             <td class="relative whitespace-nowrap py-4 pl-1 pr-1 text-right text-sm font-medium sm:pr-6">
-                                                <button @click="cash(voucher)"
+                                                <button v-if="!voucher.cashed_on"
+                                                        @click="showModal(voucher, true)"
                                                         class="flex"
                                                         :class="{'text-red-400 hover:text-red-500': voucher.cashed_on, 'text-indigo-400 hover:text-indigo-500': !voucher.cashed_on}"
-                                                >
-
-                                                    {{ !voucher.cashed_on ? 'Einlösen' : 'Reaktivieren' }}
-                                                    <CashIcon class="ml-2 h-4 w-4" v-if="!voucher.cashed_on" />
-                                                    <ReceiptRefundIcon class="ml-2 h-4 w-4" v-else />
-
+                                                >Einlösen
+                                                    <CashIcon class="ml-2 h-4 w-4" />
                                                     <span class="sr-only">, {{ voucher.code }}</span>
                                                 </button>
                                             </td>
                                             <td class="relative whitespace-nowrap py-4 pl-1 pr-1 text-right text-sm font-medium sm:pr-6">
-                                                <button @click="showModal(voucher)"
-                                                        class="flex text-gray-400 hover:text-gray-500">
+                                                <button
+                                                    @click="showModal(voucher)"
+                                                    :disabled="!voucher.amount_history.length > 1"
+                                                    class="flex text-gray-400 hover:text-gray-500"
+                                                    :class="{ 'text-gray-200 hover:text-gray-200 cursor-not-allowed' : voucher.amount_history.length > 1 }"
+                                                >
                                                     <PencilAltIcon class="w-4 h-4" />
                                                     <span class="sr-only">, {{ voucher.code }}</span>
                                                 </button>
@@ -169,23 +180,30 @@ const notifications = computed(() => {
                     </div>
                 </div>
 
-                <div v-else class="bg-white shadow sm:rounded-lg">
-                    <div class="px-4 py-5 sm:p-6">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">Wir freuen Uns, dass Du da bist!</h3>
-                        <div class="mt-2 max-w-xl text-sm text-gray-500">
-                            <p>Du hast noch keine Gutscheine! Bevor du loslegst, sieh doch einmal unter "Konfiguration"
-                                nach.</p>
+                <div v-else class="flex flex-col items-center">
+                    <div class="text-center mb-3">
+                        <div class="flex justify-center">
+                            <CubeTransparentIcon class="h-20 w-20 text-gray-200" />
                         </div>
-                        <div class="mt-3 text-sm">
-                            <a @click="showModal" type="button" href="#"
-                               class="font-medium text-indigo-600 hover:text-indigo-500"> Ersten Gutschein
-                                jetzt erstellen <span aria-hidden="true">&rarr;</span></a>
+                        <h3 class="mt-2 font-medium text-gray-900">Keine Gutscheine bisher</h3>
+                        <p class="mt-2 text-sm text-gray-500">Fang an und erstelle deinen ersten Gutschein.</p>
+                        <div class="mt-6">
+                            <button @click="showModal" type="button"
+                                    class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition" >
+                                <GiftIcon class="-ml-1 mr-2 h-4 w-4" aria-hidden="true" />
+                                Erster Gutschein!
+                            </button>
                         </div>
                     </div>
+                    <p class="mb-3 text-sm text-gray-500">ODER</p>
+                    <JetButton type="button" @click="initialImport=true">Gutschein Excelimport</JetButton>
+                    <ExcelImport :show="initialImport"></ExcelImport>
                 </div>
 
+
             </div>
-            <Modal :show="modal" :voucher="selected" @close-dialog="modal = false; selected = null"></Modal>
+            <VoucherUpdateCreate :show="modal" :voucher="selected" :is-cash="isCash"
+                                 @close-dialog="modal = false; selected = null; isCash = false"></VoucherUpdateCreate>
 
             <Notification v-for="notification in notifications"
                           :title="notification.title"

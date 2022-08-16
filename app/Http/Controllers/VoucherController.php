@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\VouchersExport;
 use App\Http\Requests\VoucherCashRequest;
 use App\Http\Requests\VoucherCreateRequest;
+use App\Imports\VouchersImport;
 use App\Models\Voucher;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class VoucherController extends Controller
 {
@@ -59,48 +64,23 @@ class VoucherController extends Controller
 
         $voucher = new Voucher();
         $voucher->code = 'HM-' . strtoupper(Str::random(5));
-        $voucher->amount = $validated['amount'];
+
         $voucher->paid_on = $validated['paid'] ? Carbon::now()->toDateString() : null;
         $voucher->user_id = auth()->user()->id;
         $voucher->save();
 
+        $voucher->amountHistory()->create([
+            'amount' => $validated['amount']
+        ]);
+
         return Redirect::route('dashboard', $request->query->all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @return Response
-     */
-    public function store()
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return Response
-     */
-    public function edit($id)
+    public function cash(int $id, VoucherCashRequest $request): RedirectResponse
     {
-        //
-    }
-
-    public function cash(int $id, VoucherCashRequest $request)
-    {
+        /** @var Voucher $voucher */
         $voucher = Voucher::find($id);
 
         if ($voucher->paid_on == null) {
@@ -113,8 +93,14 @@ class VoucherController extends Controller
 
         $validated = $request->validated();
 
-        $voucher->cashed_on = $validated['cashed'] ? Carbon::now()->toDateTimeString() : null;
-        $voucher->save();
+        $voucher->amountHistory()->create([
+            'amount' => $voucher->getActualAmount() - $validated['amount']
+        ]);
+
+        if ($voucher->getActualAmount() == 0) {
+            $voucher->cashed_on = Carbon::now()->toDateTimeString();
+            $voucher->save();
+        }
 
         return Redirect::route('dashboard', $request->query->all());
     }
@@ -131,7 +117,9 @@ class VoucherController extends Controller
         $validated = $request->validated();
         $voucher = Voucher::find($id);
 
-        $voucher->amount = $validated['amount'];
+        $amountEntry = $voucher->amountHistory()->first();
+        $amountEntry->amount = $validated['amount'];
+        $amountEntry->save();
 
         if (!$validated['paid']) {
             $voucher->paid_on = null;
@@ -144,14 +132,15 @@ class VoucherController extends Controller
         return Redirect::route('dashboard', $request->query->all());
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return Response
-     */
-    public function destroy($id)
+    public function export(): BinaryFileResponse
     {
-        //
+        return (new VouchersExport(Auth::user()->id))->download('gutscheine.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+        Excel::import(new VouchersImport(Auth::user()->id), $request->file('file'));
+
+        return Redirect::route('dashboard');
     }
 }

@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -14,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('vouchers', function (Blueprint $table) {
+        Schema::create('amount_history', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->dateTime('paid_on')->nullable();
-            $table->dateTime('cashed_on')->nullable();
             $table->timestamps();
+            $table->decimal('amount');
+            $table->foreignId('voucher_id')
+                ->references('id')
+                ->on('vouchers')
+                ->cascadeOnDelete();
         });
     }
 
@@ -31,6 +31,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vouchers');
+        Schema::table('amount_history', function (Blueprint $table) {
+            $table->dropForeign(['voucher_id']);
+        });
+
+        Schema::dropIfExists('amount_history');
     }
 };

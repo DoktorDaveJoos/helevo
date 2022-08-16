@@ -62,6 +62,6 @@ class User extends Authenticatable
 
     public function vouchers(): HasMany
     {
-        return $this->hasMany(Voucher::class);
+        return $this->hasMany(Voucher::class)->with('amountHistory');
     }
 }
