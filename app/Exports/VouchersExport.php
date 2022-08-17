@@ -29,7 +29,6 @@ class VouchersExport implements FromQuery, WithMapping, ShouldAutoSize, WithHead
         return $this;
     }
 
-
     public function query(): Relation|EloquentBuilder|Builder
     {
         return Voucher::query()->where('user_id', '=', $this->userId)->with('amountHistory');

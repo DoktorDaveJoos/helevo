@@ -37,4 +37,6 @@ Route::middleware([
 
     Route::get('/dashboard/export', [VoucherController::class, 'export'])->name('dashboard.export');
     Route::post('/dashboard/import', [VoucherController::class, 'import'])->name('dashboard.import');
+
+    Route::get('/dashboard/report', [VoucherController::class, 'report'])->name('dashboard.export');
 });

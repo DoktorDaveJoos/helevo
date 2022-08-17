@@ -52,4 +52,6 @@ $app->singleton(
 |
 */
 
+setlocale(LC_TIME, 'German');
+
 return $app;

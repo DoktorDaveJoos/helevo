@@ -84,7 +84,7 @@ function showReport() {
             </div>
 
             <ExcelImport :show="excelImport" @close-dialog="excelImport = false"></ExcelImport>
-            <Report :show="report" @close-dialog="Report = false"></Report>
+            <Report :show="report" @close-dialog="report = false"></Report>
         </div>
     </div>
 </template>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ReportExport;
 use App\Exports\VouchersExport;
 use App\Http\Requests\VoucherCashRequest;
 use App\Http\Requests\VoucherCreateRequest;
@@ -26,7 +27,7 @@ class VoucherController extends Controller
      * Display a listing of the resource.
      *
      */
-    public function index(?Request $request): RedirectResponse | Response
+    public function index(?Request $request): RedirectResponse|Response
     {
         $vouchersQuery = auth()->user()->vouchers();
 
@@ -40,7 +41,7 @@ class VoucherController extends Controller
             $vouchers = auth()->user()->vouchers()->paginate(self::PAGES);
 
             return Redirect::route('dashboard')->withErrors(
-                ['Suche' =>  sprintf('Kein Gutschein mit Code "%s" gefunden', $request->search)],
+                ['Suche' => sprintf('Kein Gutschein mit Code "%s" gefunden', $request->search)],
                 'notification'
             );
         }
@@ -70,7 +71,7 @@ class VoucherController extends Controller
         $voucher->save();
 
         $voucher->amountHistory()->create([
-            'amount' => $validated['amount']
+            'amount' => $validated['amount'],
         ]);
 
         return Redirect::route('dashboard', $request->query->all());
@@ -92,7 +93,7 @@ class VoucherController extends Controller
         $validated = $request->validated();
 
         $voucher->amountHistory()->create([
-            'amount' => $voucher->getActualAmount() - $validated['amount']
+            'amount' => $voucher->getActualAmount() - $validated['amount'],
         ]);
 
         if ($voucher->getActualAmount() == 0) {
@@ -133,6 +134,21 @@ class VoucherController extends Controller
     public function export(): BinaryFileResponse
     {
         return (new VouchersExport(Auth::user()->id))->download('gutscheine.xlsx');
+    }
+
+    public function report(Request $request): BinaryFileResponse
+    {
+        $month = $request->get('month');
+        $year = $request->get('year');
+
+        return (new ReportExport(Auth::user()->id, $month, $year))
+            ->download(
+                sprintf(
+                    'gutschein_report_%s_%s.xlsx',
+                    $month,
+                    $year
+                )
+            );
     }
 
     public function import(Request $request)
