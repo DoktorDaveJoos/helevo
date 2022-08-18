@@ -21,12 +21,9 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class VoucherController extends Controller
 {
-    private const PAGES = 20;
+    private const PER_PAGE = 20;
 
-    /**
-     * Display a listing of the resource.
-     *
-     */
+
     public function index(?Request $request): RedirectResponse|Response
     {
         $vouchersQuery = auth()->user()->vouchers();
@@ -35,10 +32,10 @@ class VoucherController extends Controller
             $vouchersQuery->where('code', '=', $request->search);
         }
 
-        $vouchers = $vouchersQuery->paginate(self::PAGES);
+        $vouchers = $vouchersQuery->paginate(self::PER_PAGE);
 
         if ($vouchers->isEmpty() && $request->has('search')) {
-            $vouchers = auth()->user()->vouchers()->paginate(self::PAGES);
+            $vouchers = auth()->user()->vouchers()->paginate(self::PER_PAGE);
 
             return Redirect::route('dashboard')->withErrors(
                 ['Suche' => sprintf('Kein Gutschein mit Code "%s" gefunden', $request->search)],
@@ -53,18 +50,14 @@ class VoucherController extends Controller
         return Inertia::render('Dashboard', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @param VoucherCreateRequest $request
-     * @return RedirectResponse
-     */
     public function create(VoucherCreateRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
+        $prefix = Auth::user()->prefix ? sprintf('%s-', Auth::user()->prefix) : null;
+
         $voucher = new Voucher();
-        $voucher->code = 'HM-' . strtoupper(Str::random(5));
+        $voucher->code = $prefix . strtoupper(Str::random(5));
 
         $voucher->paid_on = $validated['paid'] ? Carbon::now()->toDateString() : null;
         $voucher->user_id = auth()->user()->id;
@@ -104,13 +97,6 @@ class VoucherController extends Controller
         return Redirect::route('dashboard', $request->query->all());
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param int $id
-     * @param VoucherCreateRequest $request
-     * @return RedirectResponse
-     */
     public function update(int $id, VoucherCreateRequest $request): RedirectResponse
     {
         $validated = $request->validated();
@@ -129,32 +115,5 @@ class VoucherController extends Controller
         $voucher->save();
 
         return Redirect::route('dashboard', $request->query->all());
-    }
-
-    public function export(): BinaryFileResponse
-    {
-        return (new VouchersExport(Auth::user()->id))->download('gutscheine.xlsx');
-    }
-
-    public function report(Request $request): BinaryFileResponse
-    {
-        $month = $request->get('month');
-        $year = $request->get('year');
-
-        return (new ReportExport(Auth::user()->id, $month, $year))
-            ->download(
-                sprintf(
-                    'gutschein_report_%s_%s.xlsx',
-                    $month,
-                    $year
-                )
-            );
-    }
-
-    public function import(Request $request)
-    {
-        Excel::import(new VouchersImport(Auth::user()->id), $request->file('file'));
-
-        return Redirect::route('dashboard');
     }
 }

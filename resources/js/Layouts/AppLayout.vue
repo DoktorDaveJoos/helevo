@@ -52,6 +52,9 @@ const logout = () => {
                                 <JetNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Helevo - Der Gutscheinmanager
                                 </JetNavLink>
+                                <JetNavLink :href="route('settings')" :active="route().current('settings')">
+                                    Einstellungen
+                                </JetNavLink>
                             </div>
                         </div>
 
