@@ -14,8 +14,8 @@ const testimonials = [
                 'Helevo nimmt mir all das ab, was mich an Gutscheinen immer gestört hat: Die Zettelwirtschaft und die Vorbereitung für den Steuerberater. Ich bin gespannt was für Funktionen in Zukunft noch geboten werden. Daumen hoch!',
             author: {
                 name: 'Manuel Maute',
-                role: 'CEO Bradbit.com',
-                image: avatarImage3,
+                role: 'CEO BradBit GmbH - www.bradbit.com',
+                image: 'https://avatars.githubusercontent.com/u/20225909?v=4',
             },
         },
         {
