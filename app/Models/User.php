@@ -28,6 +28,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'prefix'
+    ];
+
+    /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'prefix' => '',
     ];
 
     /**
