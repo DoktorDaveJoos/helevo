@@ -14,6 +14,7 @@ module.exports = {
         extend: {
             fontFamily: {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],
+                lexend: 'Lexend'
             },
             colors: {
                 'helevo-red': '#EC5A61',

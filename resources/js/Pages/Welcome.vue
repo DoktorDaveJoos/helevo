@@ -1,6 +1,10 @@
 <script setup>
-import { Head, Link } from '@inertiajs/inertia-vue3';
-import AuthenticationCardLogo from "../Jetstream/AuthenticationCardLogo.vue";
+import Hero from "./Landing/Hero.vue";
+import Header from "./Landing/Header.vue";
+import Footer from "@/Components/Footer.vue";
+import PrimaryFeatures from "./Landing/PrimaryFeatures.vue";
+import Testimonials from "./Landing/Testimonials.vue";
+import Pricing from "./Landing/Pricing.vue";
 
 defineProps({
     canLogin: Boolean,
@@ -12,46 +16,14 @@ defineProps({
 
 <template>
     <Head title="Welcome" />
-
-    <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
-        <div v-if="canLogin" class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
-            <Link v-if="$page.props.user" :href="route('dashboard')" class="text-sm text-gray-700 underline">
-                Dashboard
-            </Link>
-
-            <template v-else>
-                <Link :href="route('login')" class="text-sm text-gray-700 underline">
-                    Log in
-                </Link>
-
-                <Link v-if="canRegister" :href="route('register')" class="ml-4 text-sm text-gray-700 underline">
-                    Register
-                </Link>
-            </template>
-        </div>
-
-        <div class="mx-auto sm:px-6 lg:px-8 flex flex-col items-center">
-
-            <AuthenticationCardLogo height="600" width="700"></AuthenticationCardLogo>
-
-            <div class="bg-white rounded-xl shadow-xl mt-16">
-                <div class="mx-auto text-center py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
-                    <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-                        <span class="block">Der kostenlose Gutscheinmanager</span>
-                        <span class="block text-helevo-red-light">Starte jetzt. Kostenlos! Für immer.</span>
-                    </h2>
-                    <div class="mt-8 flex justify-center">
-                        <Link v-if="canRegister" :href="route('register')" class="inline-flex rounded-md shadow">
-                            <a href="#" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-helevo-red-light hover:bg-helevo-red"> Registrieren </a>
-                        </Link>
-                        <div class="ml-3 inline-flex">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
+    <Header />
+    <main>
+        <Hero />
+        <PrimaryFeatures />
+        <Testimonials />
+        <Pricing />
+    </main>
+    <Footer />
 </template>
 
 <style scoped>

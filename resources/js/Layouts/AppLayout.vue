@@ -8,6 +8,7 @@ import JetDropdown from '@/Jetstream/Dropdown.vue';
 import JetDropdownLink from '@/Jetstream/DropdownLink.vue';
 import JetNavLink from '@/Jetstream/NavLink.vue';
 import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue';
+import Footer from '@/Components/Footer.vue';
 
 defineProps({
     title: String,
@@ -55,6 +56,9 @@ const logout = () => {
                                 <JetNavLink :href="route('settings')" :active="route().current('settings')">
                                     Einstellungen
                                 </JetNavLink>
+<!--                                <JetNavLink :href="route('sale')" :active="route().current('sale')">-->
+<!--                                    Verkauf-->
+<!--                                </JetNavLink>-->
                             </div>
                         </div>
 
@@ -309,6 +313,8 @@ const logout = () => {
             <main>
                 <slot />
             </main>
+
+            <Footer />
         </div>
     </div>
 </template>

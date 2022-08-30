@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\VoucherExcelController;
@@ -27,6 +28,14 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/impressum', function() {
+    return Inertia::render('Imprint');
+});
+
+Route::get('/datenschutz', function() {
+    return Inertia::render('DataProtection');
+});
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -48,4 +57,7 @@ Route::middleware([
     Route::post('/dashboard/import', [VoucherExcelController::class, 'import'])->name('dashboard.import');
 
     Route::get('/dashboard/report', [VoucherExcelController::class, 'report'])->name('dashboard.export');
+
+    /** Voucher sale related */
+    Route::get('/sale', [SaleController::class, 'index'])->name('sale');
 });
