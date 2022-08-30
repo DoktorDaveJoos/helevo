@@ -56,9 +56,9 @@ const logout = () => {
                                 <JetNavLink :href="route('settings')" :active="route().current('settings')">
                                     Einstellungen
                                 </JetNavLink>
-                                <JetNavLink :href="route('sale')" :active="route().current('sale')">
-                                    Verkauf
-                                </JetNavLink>
+<!--                                <JetNavLink :href="route('sale')" :active="route().current('sale')">-->
+<!--                                    Verkauf-->
+<!--                                </JetNavLink>-->
                             </div>
                         </div>
 
