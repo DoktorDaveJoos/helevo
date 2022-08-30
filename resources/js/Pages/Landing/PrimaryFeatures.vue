@@ -12,7 +12,7 @@ const features = [
         image: HelevoDashboard
     },
     {
-        title: "Reports & Excel im-exports",
+        title: "Reporting & Excel Im- und Exports",
         description: "Erstellen Sie einen Report für Ihren Steuerberater. Importieren oder Exportieren Sie ihre Gutschein ganz unkompliziert via Excel.",
         image: SteuerReport
     }
