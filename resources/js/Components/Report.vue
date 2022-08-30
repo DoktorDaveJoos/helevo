@@ -9,7 +9,7 @@ import {
     ListboxOptions
 } from '@headlessui/vue'
 import {computed, ref} from "vue";
-import {UploadIcon} from '@heroicons/vue/outline'
+import {DownloadIcon} from '@heroicons/vue/outline'
 import ModalWrapper from "./ModalWrapper.vue";
 import {CheckIcon, SelectorIcon} from '@heroicons/vue/solid'
 import JetButton from '../Jetstream/Button.vue';
@@ -53,12 +53,12 @@ const endpoint = computed(() => {
             <div>
                 <div
                     class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-                    <UploadIcon class="h-6 w-6 text-red-600" aria-hidden="true" />
+                    <DownloadIcon class="h-6 w-6 text-red-600" aria-hidden="true" />
                 </div>
                 <div class="mt-3 text-center sm:mt-5">
                     <DialogTitle as="h3"
                                  class="text-lg leading-6 font-medium text-gray-900">
-                        Gutscheine importieren
+                        Download Report
                     </DialogTitle>
                     <div class="mt-2">
                         <form @submit.prevent="submit">
