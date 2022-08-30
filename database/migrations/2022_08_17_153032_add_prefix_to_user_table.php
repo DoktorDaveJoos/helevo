@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('prefix');
+            $table->string('prefix')->default(new Illuminate\Database\Query\Expression('HEL'));
         });
     }
 
