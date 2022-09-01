@@ -59,16 +59,15 @@ const testimonials = [
                 image: avatarImage4,
             },
         },
-
-        // {
-        //     content:
-        //         'This is the fourth email I’ve sent to your support team. I am literally being held in jail for tax fraud. Please answer your damn emails, this is important.',
-        //     author: {
-        //         name: 'Amy Hahn',
-        //         role: 'Director at Velocity Industries',
-        //         image: avatarImage4,
-        //     },
-        // },
+        {
+            content:
+                'Helevo ist super modern. Support ist super nett. Wir hatten noch einen Feature Vorschlag der prompt umgesetzt wurde. Perfekt - freuen Uns aufs Premium Paket.',
+            author: {
+                name: 'Robin Reiter',
+                role: 'Gründer Robins Tools',
+                image: avatarImage3,
+            },
+        },
     ],
 ]
 

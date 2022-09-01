@@ -5,6 +5,7 @@ import Footer from "@/Components/Footer.vue";
 import PrimaryFeatures from "./Landing/PrimaryFeatures.vue";
 import Testimonials from "./Landing/Testimonials.vue";
 import Pricing from "./Landing/Pricing.vue";
+import LightFeatures from "./Landing/LightFeatures.vue";
 
 defineProps({
     canLogin: Boolean,
@@ -24,6 +25,7 @@ defineProps({
     <Header />
     <main>
         <Hero />
+        <LightFeatures />
         <PrimaryFeatures />
         <Testimonials />
         <Pricing />
