@@ -59,5 +59,5 @@ Route::middleware([
     Route::get('/dashboard/report', [VoucherExcelController::class, 'report'])->name('dashboard.export');
 
     /** Voucher sale related */
-    Route::get('/sale', [SaleController::class, 'index'])->name('sale');
+//    Route::get('/sale', [SaleController::class, 'index'])->name('sale');
 });
