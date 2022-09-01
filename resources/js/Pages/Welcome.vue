@@ -15,7 +15,7 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Welcome" />
+    <Head title="Dein kostenloser Gutscheinmanager" />
     <Header />
     <main>
         <Hero />
