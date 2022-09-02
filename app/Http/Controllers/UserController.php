@@ -22,6 +22,8 @@ class UserController extends Controller
 
         $validated = $request->validated();
 
+        ray($validated);
+
         $user = $request->user();
 
         $user->prefix = strtoupper($validated['prefix']);

@@ -53,6 +53,24 @@ function onDrop(e) {
         return;
     }
 
+    for (var i = 0; i < e.dataTransfer.items.length; i++) {
+        const splitted = e.dataTransfer.items[i].type.split('/');
+        var ext = splitted[splitted.length - 1];
+
+        if (ext.includes('+')) {
+            ext = ext.split('+')[0];
+        }
+        const lowered = props.fileTypes.map(item => item.toLowerCase());
+
+        console.log(lowered, ext);
+        if (!lowered.includes(ext)) {
+            error.value.hasError = true;
+            error.value.message = 'Dieser File Typ ist nicht erlaubt.';
+            setInactive();
+            return
+        }
+    }
+
     emit('files', e.dataTransfer.files);
     setInactive()
 }
@@ -85,7 +103,7 @@ function onDrop(e) {
             </div>
             <p class="text-xs text-gray-500">{{ fileTypes.join(', ') }} bis zu 10MB</p>
         </div>
-        <div v-if="error.hasError">{{ error.message }}</div>
     </div>
+    <div class="text-red-500" v-if="error.hasError">{{ error.message }}</div>
 
 </template>

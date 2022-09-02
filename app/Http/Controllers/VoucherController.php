@@ -121,10 +121,16 @@ class VoucherController extends Controller
 
     public function print(Voucher $voucher)
     {
+
+        $text = 'Hier bekommst du einen Gutschein du Hundesohn. Gib nicht alles auf einmal aus und jetzt verpiss Dich!';
+        $company = 'Robins Tools';
+
         return Pdf::loadHTML(Blade::Render('pdf/voucher', [
+            'company' => $company,
+            'text' => $text,
             'code' => $voucher->code,
             'amount' => $voucher->getActualAmount()
         ]))->setPaper('a4')
-            ->stream(sprintf('Gutschein-%s.pdf', $voucher->code));
+            ->download(sprintf('Gutschein-%s.pdf', $voucher->code));
     }
 }

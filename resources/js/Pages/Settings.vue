@@ -2,6 +2,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Notification from "../Components/Notification.vue";
 import JetButton from '@/Jetstream/Button.vue';
+import FileUpload from '@/Components/FileUpload.vue';
 import {useForm} from "@inertiajs/inertia-vue3";
 import {watch} from "vue";
 
@@ -14,8 +15,13 @@ watch(props, (o, n) => {
 })
 
 const form = useForm({
-    prefix: props.prefix
+    prefix: props.prefix,
+    logo: null
 })
+
+function handleFile(files) {
+    form.logo = files[0];
+}
 
 function submit() {
     form.put('/settings');
@@ -34,19 +40,29 @@ function submit() {
                         <div class="md:col-span-1">
                             <div class="px-4 sm:px-0">
                                 <h3 class="text-lg font-medium leading-6 text-gray-900">Einstellungen</h3>
-                                <p class="mt-1 text-sm text-gray-600">Dies wird stetig erweitert. Noch befinden wir uns
-                                    im Aufbau :-)</p>
+                                <p class="mt-1 text-sm text-gray-600">
+                                    Hier kannst du alle relevanten Daten pflegen, die Du für deine Gutscheine brauchst.
+                                </p>
                             </div>
                         </div>
                         <div class="mt-5 md:mt-0 md:col-span-2">
                             <form @submit.prevent>
                                 <div class="shadow sm:rounded-md sm:overflow-hidden">
+
+
                                     <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                                        <div class="col-span-6">
+                                            <label for="street-address" class="block text-sm font-medium text-gray-700">Firmenname</label>
+                                            <input type="text" name="street-address" id="street-address"
+                                                   autocomplete="street-address"
+                                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        </div>
                                         <div class="grid grid-cols-3 gap-6">
                                             <div class="col-span-3 sm:col-span-2">
                                                 <label for="company-website"
                                                        class="block text-sm font-medium text-gray-700"> Prefix für den
-                                                    Gutschein-Code (Beispiel: HM-ABC124) </label>
+                                                    Gutschein-Code (Beispiel:
+                                                    {{ form.prefix.length > 0 ? form.prefix : 'HV' }}-ABC124) </label>
                                                 <div class="mt-1 flex rounded-md shadow-sm">
                                                     <input v-model="form.prefix" type="text" name="company-website"
                                                            id="company-website"
@@ -60,8 +76,15 @@ function submit() {
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <div>
+                                            <label
+                                                class="block text-sm font-medium text-gray-700">Unternehmenslogo</label>
+                                            <FileUpload v-if="form.logo === null" @files="handleFile" :file-types="['PNG', 'JPEG', 'SVG']" />
+                                            <span v-else>{{ form.logo?.name }}</span>
+                                        </div>
                                     </div>
+
+
                                     <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                                         <JetButton type="button" @click="submit">
                                             Speichern

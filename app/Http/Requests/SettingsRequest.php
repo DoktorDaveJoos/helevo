@@ -24,7 +24,8 @@ class SettingsRequest extends FormRequest
     public function rules()
     {
         return [
-            'prefix' => 'nullable|alpha|max:2'
+            'prefix' => 'nullable|alpha|max:3',
+            'logo' => 'nullable',
         ];
     }
 
@@ -35,7 +36,7 @@ class SettingsRequest extends FormRequest
     {
         return [
             'prefix.alpha' => 'Prefix muss aus Buchstaben bestehen',
-            'prefix.max' => 'Prefix darf maximal die aus zwei Buchstaben bestehen',
+            'prefix.max' => 'Prefix darf maximal aus drei Buchstaben bestehen',
         ];
     }
 }
