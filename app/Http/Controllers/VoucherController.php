@@ -8,10 +8,12 @@ use App\Http\Requests\VoucherCashRequest;
 use App\Http\Requests\VoucherCreateRequest;
 use App\Imports\VouchersImport;
 use App\Models\Voucher;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -115,5 +117,14 @@ class VoucherController extends Controller
         $voucher->save();
 
         return Redirect::route('dashboard', $request->query->all());
+    }
+
+    public function print(Voucher $voucher)
+    {
+        return Pdf::loadHTML(Blade::Render('pdf/voucher', [
+            'code' => $voucher->code,
+            'amount' => $voucher->getActualAmount()
+        ]))->setPaper('a4')
+            ->stream(sprintf('Gutschein-%s.pdf', $voucher->code));
     }
 }

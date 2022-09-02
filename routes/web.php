@@ -52,6 +52,8 @@ Route::middleware([
     Route::put('/dashboard/{id}', [VoucherController::class, 'update'])->name('dashboard.update');
     Route::put('/dashboard/{id}/cash', [VoucherController::class, 'cash'])->name('dashboard.cash');
 
+    Route::get('/print/{voucher}', [VoucherController::class, 'print'])->name('voucher.print');
+
     /** Voucher export related */
     Route::get('/dashboard/export', [VoucherExcelController::class, 'export'])->name('dashboard.export');
     Route::post('/dashboard/import', [VoucherExcelController::class, 'import'])->name('dashboard.import');

@@ -1,7 +1,7 @@
 <script setup>
 import {computed, defineProps, ref} from "vue";
 import {usePage} from "@inertiajs/inertia-vue3";
-import {CashIcon, GiftIcon, PencilAltIcon, CubeTransparentIcon} from "@heroicons/vue/outline";
+import {CashIcon, CubeTransparentIcon, GiftIcon, PencilAltIcon, PrinterIcon} from "@heroicons/vue/outline";
 
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Pagination from "../Components/Pagination.vue";
@@ -97,6 +97,9 @@ const notifications = computed(() => {
                                                 Zuletzt benutzt
                                             </th>
                                             <th scope="col" class="relative py-3.5 pl-1 pr-4 sm:pr-6">
+                                                <span class="sr-only">Gutschein</span>
+                                            </th>
+                                            <th scope="col" class="relative py-3.5 pl-1 pr-4 sm:pr-6">
                                                 <span class="sr-only">Aktion</span>
                                             </th>
                                             <th scope="col" class="relative py-3.5 pl-1 pr-4 sm:pr-6">
@@ -144,6 +147,13 @@ const notifications = computed(() => {
                                                 }}
                                             </td>
                                             <td class="relative whitespace-nowrap py-4 pl-1 pr-1 text-right text-sm font-medium sm:pr-6">
+                                                <a :href="route('voucher.print', voucher.id)"
+                                                   class="flex text-sky-500">
+                                                    Drucken
+                                                    <PrinterIcon class="ml-2 h-4 w-4" />
+                                                </a>
+                                            </td>
+                                            <td class="relative whitespace-nowrap py-4 pl-1 pr-1 text-right text-sm font-medium sm:pr-6">
                                                 <button v-if="!voucher.cashed_on"
                                                         @click="showModal(voucher, true)"
                                                         class="flex"
@@ -188,7 +198,7 @@ const notifications = computed(() => {
                         <p class="mt-2 text-sm text-gray-500">Fang an und erstelle deinen ersten Gutschein.</p>
                         <div class="mt-6">
                             <button @click="showModal" type="button"
-                                    class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition" >
+                                    class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition">
                                 <GiftIcon class="-ml-1 mr-2 h-4 w-4" aria-hidden="true" />
                                 Erster Gutschein!
                             </button>
