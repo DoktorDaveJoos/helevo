@@ -9,6 +9,15 @@
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
 
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-D26V73V2S2"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-D26V73V2S2');
+        </script>
+
         <!-- Scripts -->
         @routes
         @vite('resources/js/app.js')
