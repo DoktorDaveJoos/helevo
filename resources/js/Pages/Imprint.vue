@@ -7,7 +7,7 @@ import Footer from '@/Components/Footer.vue';
 <template>
 
     <Header />
-    <div class="p-6 text-gray-800 text-sm">
+    <div class="p-32 text-gray-800 text-sm">
 
 
         <h1>Impressum</h1>
@@ -15,7 +15,7 @@ import Footer from '@/Components/Footer.vue';
             Edensbach 85/2<br/>
             88289 Waldburg<br/>
             Tel: +49 172 2541810<br/>
-            <a href="mailto:kontakt@orgusto.com">kontakt@orgusto.com</a>
+            <a href="mailto:david@helevo.com">david@helevo.com</a>
         </p>
         <meta name="generator" content="Impressum-Generator der Kanzlei Hensche Rechtsanwälte"/>
         <p>&nbsp;</p>

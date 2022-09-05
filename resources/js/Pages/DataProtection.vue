@@ -7,7 +7,7 @@ import Footer from '@/Components/Footer.vue';
 
     <Header />
 
-    <div class="p-6 text-gray-800 text-sm">
+    <div class="p-32 text-gray-800 text-sm">
 
         <h2 class="my-4"><strong>Datenschutzerklärung</strong></h2>
 
@@ -52,16 +52,16 @@ import Footer from '@/Components/Footer.vue';
             <br />
             <br />
             <span
-            >Orgusto<br>Edensbach 85/2<br>88289 Waldburg<br>Deutschland</span>
+            >David Joos<br>Edensbach 85/2<br>88289 Waldburg<br>Deutschland</span>
         </p>
-        <p><span>Telefon: +49 172/2541810<br>E-Mail: kontakt@orgusto.com</span></p>
+        <p><span>Telefon: +49 172/2541810<br>E-Mail: david@helevo.com</span></p>
         <p>Datenschutzbeauftragte/r beim Anbieter ist:</p>
         <p><span>David Joos&nbsp;</span></p>
         <p>
         </p>
         <p><span>Edensbach 85/2<br>88289<br>Waldburg</span></p>
         <p><span
-        >Telefon: +49 172/2541810<br>E-Mail: datenschutz@orgusto.com</span>
+        >Telefon: +49 172/2541810<br>E-Mail: david@helevo.com</span>
         </p>
         <br />
         <h3>II. Rechte der Nutzer und Betroffenen</h3>
@@ -429,11 +429,7 @@ import Footer from '@/Components/Footer.vue';
         <p>weitere Informationen zu der vorbeschriebenen Verarbeitung sowie auch die geltenden Datenschutzbestimmungen
             zur
             Verfügung.</p>
-        <p><a href="https://www.ratgeberrecht.eu/leistungen/muster-datenschutzerklaerung.html"
-              target="_blank" rel="noopener">Muster-Datenschutzerklärung</a> der <a
-            href="https://www.ratgeberrecht.eu/datenschutz/datenschutzerklaerung-generator-dsgvo.html"
-            target="_blank"
-            rel="noopener">Anwaltskanzlei Weiß &amp; Partner</a></p>
+
 
     </div>
 
