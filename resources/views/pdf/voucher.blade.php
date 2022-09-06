@@ -25,101 +25,107 @@
             font-weight: normal;
         }
 
-        .lexend {
+        .company-container {
+            position: absolute;
+            top: 380px;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 30%;
+            text-align: center;
             font-family: Lexend, sans-serif;
         }
 
-        .nunito {
+        .company-text {
+            color: white;
+            font-size: 28px;
+        }
+
+        .text-container {
+            position: absolute;
+            top: 440px;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+            text-align: center;
             font-family: Nunito, sans-serif;
         }
 
-        .satisfy {
-            font-family: Satisfy, cursive;
+        .text-text {
+            color: white;
+            font-size: 16px;
+            font-weight: lighter;
+            line-height: normal;
         }
 
-        .container {
-            width: 595px;
-            height: 150px;
-        }
-
-        .smaller-container {
-            width: 595px;
-            height: 75px;
-        }
-
-        .center__vertical {
+        .code-container {
             position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .center__horizontal {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .center__both {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .box {
-            width: 110px;
-            padding: 2rem;
-            background-color: #F28D91;
-            border-radius: 0.5rem;
-            opacity: 0.8;
+            top: 740px;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 30%;
             text-align: center;
+            font-family: Lexend, sans-serif;
         }
 
-        .gray-500 {
-            color: #6b7280
+        .code-text {
+            font-size: 20px;
         }
+
+        .amount-container {
+            position: absolute;
+            top: 880px;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 30%;
+            text-align: center;
+            font-family: Lexend, sans-serif;
+        }
+
+        .amount-text {
+            font-size: 20px;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 110px;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 25%;
+        }
+
     </style>
 </head>
-<body>
+<body
+    style="background-image: url({{ storage_path('img/voucher-boiler.png') }}); background-size: 100% 100%; background-repeat: no-repeat;">
 
-<div style="height: 200px"></div>
-
-
-<div class="container">
-    <div class="center__horizontal">
-
-    </div>
+<div class="logo-container">
+    <img style="top: 0; bottom: 0; left: 0; right: 0; width: 100%; margin: auto" src="{{ storage_path('app/helevo-base-logo.png') }}" alt="company logo" />
 </div>
 
-<div class="container">
-    <div class="center__horizontal">
-        <span class="satisfy" style="font-size: 45px">Gutschein</span>
-    </div>
-</div>
-<div class="smaller-container">
-    <div class="center__horizontal">
-        <span class="lexend" style="font-size: 30px">{{ $company }}</span>
-    </div>
+<div class="company-container">
+    <div class="company-text">{{ $company }}</div>
 </div>
 
-<div class="container">
-    <div class="center__horizontal" style="text-align: center">
-        <span class="nunito gray-500" style="font-size: 16px">{{ $text }}</span>
-    </div>
+<div class="text-container">
+    <div class="text-text">{{ $text }}</div>
 </div>
 
-<div class="container nunito">
-    <div class="center__horizontal">
-        <div class="lexend gray-500" style="font-size: x-small">Gutschein Code</div>
-        <div class="box">{{ $code }}</div>
-    </div>
+<div class="code-container">
+    <div class="code-text">{{ $code }}</div>
 </div>
 
-<div class="container nunito">
-    <div class="center__horizontal">
-        <div class="lexend gray-500" style="font-size: x-small">Betrag</div>
-        <div class="box">{{ $amount }} €</div>
-    </div>
+<div class="amount-container">
+    <div class="amount-text">{{ $amount }} €</div>
 </div>
 
 </body>

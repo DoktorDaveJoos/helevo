@@ -129,6 +129,7 @@ class VoucherController extends Controller
             'company' => $company,
             'text' => $text,
             'code' => $voucher->code,
+
             'amount' => $voucher->getActualAmount()
         ]))->setPaper('a4')
             ->download(sprintf('Gutschein-%s.pdf', $voucher->code));
