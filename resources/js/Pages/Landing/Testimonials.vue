@@ -1,11 +1,6 @@
 <script setup>
 import Container from '@/Components/Container.vue';
-
-import avatarImage1 from './images/avatars/avatar-1.png'
-import avatarImage2 from './images/avatars/avatar-2.png'
-import avatarImage3 from './images/avatars/avatar-3.png'
-import avatarImage4 from './images/avatars/avatar-4.png'
-import avatarImage5 from './images/avatars/avatar-5.png'
+import MD5 from "crypto-js/md5";
 
 const testimonials = [
     [
@@ -15,57 +10,29 @@ const testimonials = [
             author: {
                 name: 'Manuel Maute',
                 role: 'CEO BradBit GmbH - www.bradbit.com',
-                image: 'https://avatars.githubusercontent.com/u/20225909?v=4',
+                image: 'https://www.gravatar.com/avatar/' + MD5('manuel.maute@bradbit.com') + '?s=80',
             },
         },
+    ],
+    [
         {
             content:
                 'Endlich keine Excellisten mehr :-) bin gespannt auf die Integration zum Gutscheinverkauf auf der eigenen Website.',
             author: {
                 name: 'Ihsan Sensoy',
                 role: 'Veranstaltungsmanager',
-                image: avatarImage5,
-            },
-        },
-
-    ],
-    [
-        {
-            content:
-                'Kostenlos, sieht gut aus, einfach zu bedienen. Top :-)',
-            author: {
-                name: 'Mara Vogt',
-                role: 'Hotelkauffrau',
-                image: avatarImage1,
-            },
-        },
-        {
-            content:
-                'Very happy that we found helevo! Makes it easy to manage our stuff especially in the german bureaucracy :-P .. And it\'s for free, try it. Thanks guys',
-            author: {
-                name: 'Erin Powlowski',
-                role: 'Owner - The Handbag',
-                image: avatarImage2,
+                image: 'https://www.gravatar.com/avatar/' + MD5('ihsan.sensoy@gmx.de') + '?s=80'
             },
         },
     ],
     [
-        {
-            content:
-                'Wir haben all unsere Gutscheine ganz einfach bei Helevo importiert. Ein Klacks! Jetzt können wir unsere Gutschein ganz einfach von überall managen.',
-            author: {
-                name: 'Julia Keser',
-                role: 'Friseurmeisterin',
-                image: avatarImage4,
-            },
-        },
         {
             content:
                 'Helevo ist super modern. Support ist super nett. Wir hatten noch einen Feature Vorschlag der prompt umgesetzt wurde. Perfekt - freuen Uns aufs Premium Paket.',
             author: {
                 name: 'Robin Reiter',
                 role: 'Gründer Robins Tools',
-                image: avatarImage3,
+                image: 'https://www.gravatar.com/avatar/' + MD5('robin7331@gmail.com') + '?s=80',
             },
         },
     ],
@@ -82,11 +49,10 @@ const testimonials = [
         <Container>
             <div class="mx-auto max-w-2xl md:text-center">
                 <h2 class="font-display text-3xl tracking-tight text-slate-900 sm:text-4xl">
-                    Beliebt in einer Vielzahl von Branchen.
+                    Was Unsere Kunden sagen.
                 </h2>
                 <p class="mt-4 text-lg tracking-tight text-slate-700">
-                    Wir bieten mit unserer Software genau das was Du brauchst. Und das kostenlos. Wir finden das gut und
-                    unser Kunden auch!
+                    Wir bieten mit Helevo das, was Du für dein Unternehmen brauchst - und das kostenlos. Wir finden das gut & unsere Kunden auch.
                 </p>
             </div>
             <ul
