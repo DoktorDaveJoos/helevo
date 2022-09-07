@@ -123,7 +123,7 @@ class VoucherController extends Controller
     {
 
         $user = Auth::user();
-        $logo = $user->logo_path ? 'app/' . $user->logo_path : 'app/helevo-base-logo.png';
+        $logo = $user->logo_path ? 'app/' . $user->logo_path : 'app/logos/helevo-base-logo.png';
 
         return Pdf::loadHTML(Blade::Render('pdf/voucher', [
             'logo' => $logo,
