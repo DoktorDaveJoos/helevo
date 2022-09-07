@@ -44,7 +44,7 @@
 
         .text-container {
             position: absolute;
-            top: 440px;
+            top: 470px;
             left: 0;
             right: 0;
             margin-left: auto;
@@ -56,7 +56,7 @@
 
         .text-text {
             color: white;
-            font-size: 16px;
+            font-size: 12px;
             font-weight: lighter;
             line-height: normal;
         }
@@ -94,13 +94,22 @@
         }
 
         .logo-container {
-            position: absolute;
+            position: relative;
             top: 110px;
             left: 0;
             right: 0;
             margin-left: auto;
             margin-right: auto;
-            width: 25%;
+            width: 28%;
+            height: 170px;
+        }
+
+        .logo {
+            width: 80%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
     </style>
@@ -109,7 +118,7 @@
     style="background-image: url({{ storage_path('img/voucher-boiler.png') }}); background-size: 100% 100%; background-repeat: no-repeat;">
 
 <div class="logo-container">
-    <img style="top: 0; bottom: 0; left: 0; right: 0; width: 100%; margin: auto" src="{{ storage_path('app/helevo-base-logo.png') }}" alt="company logo" />
+    <img class="logo" src="{{ storage_path($logo) }}" alt="company logo" />
 </div>
 
 <div class="company-container">

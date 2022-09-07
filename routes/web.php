@@ -44,7 +44,8 @@ Route::middleware([
 
     /** User related */
     Route::get('/settings', [UserController::class, 'index'])->name('settings');
-    Route::put('/settings', [UserController::class, 'update'])->name('settings.update');
+    Route::post('/settings', [UserController::class, 'update'])->name('settings.update');
+    Route::get('/logos/{filename}', [UserController::class, 'displayLogo'])->name('logos.show');
 
     /** Voucher related */
     Route::get('/dashboard', [VoucherController::class, 'index'])->name('dashboard');

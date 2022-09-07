@@ -122,14 +122,14 @@ class VoucherController extends Controller
     public function print(Voucher $voucher)
     {
 
-        $text = 'Hier bekommst du einen Gutschein du Hundesohn. Gib nicht alles auf einmal aus und jetzt verpiss Dich!';
-        $company = 'Robins Tools';
+        $user = Auth::user();
+        $logo = $user->logo_path ? 'app/' . $user->logo_path : 'app/helevo-base-logo.png';
 
         return Pdf::loadHTML(Blade::Render('pdf/voucher', [
-            'company' => $company,
-            'text' => $text,
+            'logo' => $logo,
+            'company' => $user->name,
+            'text' => $user->welcome_text,
             'code' => $voucher->code,
-
             'amount' => $voucher->getActualAmount()
         ]))->setPaper('a4')
             ->download(sprintf('Gutschein-%s.pdf', $voucher->code));
