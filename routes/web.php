@@ -44,13 +44,16 @@ Route::middleware([
 
     /** User related */
     Route::get('/settings', [UserController::class, 'index'])->name('settings');
-    Route::put('/settings', [UserController::class, 'update'])->name('settings.update');
+    Route::post('/settings', [UserController::class, 'update'])->name('settings.update');
+    Route::get('/logos/{filename}', [UserController::class, 'displayLogo'])->name('logos.show');
 
     /** Voucher related */
     Route::get('/dashboard', [VoucherController::class, 'index'])->name('dashboard');
     Route::post('/dashboard', [VoucherController::class, 'create'])->name('dashboard.create');
     Route::put('/dashboard/{id}', [VoucherController::class, 'update'])->name('dashboard.update');
     Route::put('/dashboard/{id}/cash', [VoucherController::class, 'cash'])->name('dashboard.cash');
+
+    Route::get('/print/{voucher}', [VoucherController::class, 'print'])->name('voucher.print');
 
     /** Voucher export related */
     Route::get('/dashboard/export', [VoucherExcelController::class, 'export'])->name('dashboard.export');

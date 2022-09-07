@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "barryvdh/laravel-dompdf": "^2.0",
         "doctrine/dbal": "^3.4",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.5.2",
@@ -16,6 +17,7 @@
         "laravel/tinker": "^2.7",
         "maatwebsite/excel": "^3.1",
         "psr/simple-cache": "^2.0",
+        "spatie/laravel-ray": "^1.30",
         "symfony/http-client": "^6.1",
         "symfony/postmark-mailer": "^6.1",
         "tightenco/ziggy": "^1.0"

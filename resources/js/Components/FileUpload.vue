@@ -7,6 +7,10 @@ const props = defineProps({
         required: true,
         type: Array
     },
+    max: {
+      type: String,
+      default: '10MB'
+    },
     multi: {
         type: Boolean,
         default: false
@@ -14,7 +18,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['files']);
-const events = ['dragenter', 'dragover', 'dragleave', 'drop'];
+const events = ['dragenter', 'dragover', 'dragleave', 'drop', 'change'];
 const active = ref(false);
 const error = ref({
     hasError: false,
@@ -53,10 +57,31 @@ function onDrop(e) {
         return;
     }
 
+    for (let i = 0; i < e.dataTransfer.items.length; i++) {
+        const split = e.dataTransfer.items[i].type.split('/');
+        let ext = split[split.length - 1];
+
+        if (ext.includes('+')) {
+            ext = ext.split('+')[0];
+        }
+        const lowered = props.fileTypes.map(item => item.toLowerCase());
+
+        if (!lowered.includes(ext)) {
+            error.value.hasError = true;
+            error.value.message = 'Dieser File Typ ist nicht erlaubt.';
+            setInactive();
+            return
+        }
+    }
+
     emit('files', e.dataTransfer.files);
     setInactive()
 }
 
+
+function onChange(e) {
+    emit('files', e.target.files);
+}
 
 </script>
 <template>
@@ -66,6 +91,7 @@ function onDrop(e) {
          @dragover.prevent="setActive"
          @dragleave.prevent="setInactive"
          @drop.prevent="onDrop"
+         @change.prevent="onChange"
          class="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
          :class="{ 'bg-red-50': active }">
         <div class="space-y-1 text-center">
@@ -83,9 +109,9 @@ function onDrop(e) {
                 </label>
                 <p class="pl-1">oder 'drag and drop'</p>
             </div>
-            <p class="text-xs text-gray-500">{{ fileTypes.join(', ') }} bis zu 10MB</p>
+            <p class="text-xs text-gray-500">{{ fileTypes.join(', ') }} bis zu {{ max }}</p>
         </div>
-        <div v-if="error.hasError">{{ error.message }}</div>
     </div>
+    <div class="text-red-500" v-if="error.hasError">{{ error.message }}</div>
 
 </template>
